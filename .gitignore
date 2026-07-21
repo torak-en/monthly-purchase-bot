@@ -1,0 +1,25 @@
+# Virtual environment
+venv/
+
+# PyCharm
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Logs
+logs/
+
+# Environment variables
+.env
+
+# Playwright browser data
+playwright/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
