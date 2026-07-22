@@ -1,5 +1,6 @@
 from amazon_buyer.amazon import AmazonSetup
 from amazon_buyer.browser import BrowserManager
+from amazon_buyer.checkout import CheckoutManager
 from amazon_buyer.config import Config
 from amazon_buyer.exceptions import ConfigurationError
 from amazon_buyer.logger import configure_logger
@@ -63,7 +64,37 @@ def main():
 
         logger.info("Price acceptable")
 
-        input("\nPress Enter to close the browser...\n")
+        checkout = CheckoutManager(page, config)
+
+        if not checkout.add_to_basket():
+            logger.error("Failed to add product to basket")
+            return
+
+        basket_total = checkout.get_basket_total()
+
+        if basket_total is None:
+            logger.error("Could not retrieve basket total")
+            return
+
+        if not checkout.verify_basket_total(basket_total, product_price):
+            logger.error("Basket total verification failed")
+            return
+
+        logger.info("Basket verification successful")
+
+        if not checkout.proceed_to_checkout():
+            logger.error("Could not proceed to checkout")
+            return
+
+        logger.info("Checkout page ready")
+
+        if not checkout.purchase():
+            logger.error("Purchase failed")
+            return
+
+        logger.info("Purchase workflow completed successfully")
+
+        input("Press any key to continue...")
 
     finally:
 

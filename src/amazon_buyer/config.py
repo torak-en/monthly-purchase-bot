@@ -19,6 +19,8 @@ class Config:
         self.validate()
 
         self.max_price = float(self.max_price)
+        self.dry_run = os.getenv("DRY_RUN").lower() == "true"
+        self.headless = os.getenv("HEADLESS").lower() == "true"
 
     def validate(self):
         errors = []
