@@ -22,7 +22,7 @@ def main():
 
     logger.info("Configuration loaded successfully")
 
-    browser = BrowserManager(False)
+    browser = BrowserManager(config.headless)
 
     try:
 
