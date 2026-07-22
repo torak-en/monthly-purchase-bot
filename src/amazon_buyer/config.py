@@ -18,6 +18,8 @@ class Config:
         
         self.validate()
 
+        self.max_price = float(self.max_price)
+
     def validate(self):
         errors = []
         

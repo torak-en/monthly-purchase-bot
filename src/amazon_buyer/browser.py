@@ -1,4 +1,5 @@
 import logging
+import os
 
 from playwright.sync_api import sync_playwright
 from amazon_buyer.exceptions import BrowserError
@@ -15,7 +16,13 @@ class BrowserManager:
         self.context = None
         self.page = None
 
+        self.session_directory = "sessions"
+        self.session_file = os.path.join(self.session_directory, "amazon_session.json")
         logger.debug(f"BrowserManager created (headless={headless})")
+
+        os.makedirs(self.session_directory, exist_ok=True)
+
+        logger.debug(f"Session file: {self.session_file}")
 
     def start(self):
         
@@ -32,7 +39,17 @@ class BrowserManager:
 
         logger.info("Creating browser context")
 
-        self.context = self.browser.new_context()
+        if os.path.exists(self.session_file):
+
+            logger.info("Existing session found")
+
+            self.context = self.browser.new_context(storage_state=self.session_file)
+
+        else:
+
+            logger.info("No existing session found")
+
+            self.context = self.browser.new_context()
 
         logger.info("Creating browser page")
 
@@ -72,3 +89,15 @@ class BrowserManager:
             self.playwright = None
 
         logger.info("Browser closed successfully")
+
+    def save_session(self):
+
+        if not self.context:
+            logger.error("Cannot save session. Browser context does not exist.")
+            return
+
+        logger.info("Saving session")
+
+        self.context.storage_state(path=self.session_file)
+
+        logger.info("Browser session saved successfully")

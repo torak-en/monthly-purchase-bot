@@ -12,6 +12,9 @@ __pycache__/
 # Logs
 logs/
 
+# Sessions
+sessions/
+
 # Environment variables
 .env
 
