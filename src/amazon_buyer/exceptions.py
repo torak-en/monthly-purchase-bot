@@ -16,3 +16,9 @@ class ConfigurationError(Exception):
             error_message += f"{error}\n"
 
         return error_message
+
+class BrowserError(Exception):
+    def __init__(self, error):
+        self.error = error
+
+        super().__init__(self.error)
