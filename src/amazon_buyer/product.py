@@ -1,5 +1,7 @@
 import logging
 
+from amazon_buyer.exceptions import ProductError
+
 logger = logging.getLogger("amazon_logger")
 
 
@@ -9,43 +11,42 @@ class ProductManager:
 
         self.page = page
         self.config = config
-        self.product_name = None
-        self.product_price = None
 
     def open_product(self):
 
         logger.info("Opening product page")
 
         try:
+
             self.page.goto(self.config.product_url, timeout=30000)
 
             self.page.wait_for_load_state("domcontentloaded", timeout=30000)
 
         except Exception as error:
-            logger.error(f"Failed opening product page: {error}")
 
-            return False
+            raise ProductError("Failed opening product page: {error}")
+
 
         current_url = self.page.url
 
         try:
+
             title = self.page.title()
 
         except Exception:
+
             title = ""
 
         logger.debug(f"Product URL: {current_url}")
         logger.debug(f"Product title: {title}")
 
         if "/ap/signin" in current_url or "Amazon Sign-In" in title:
-            logger.error("Amazon login required")
 
-            return False
+            raise ProductError("Amazon login required")
 
         if "Page Not Found" in title or "Sorry" in title:
-            logger.error("Product page not found")
 
-            return False
+            raise ProductError("Product page not found")
 
         logger.info("Product page opened successfully")
 
@@ -56,12 +57,12 @@ class ProductManager:
         logger.info("Getting product name")
 
         try:
+
             product_name = self.page.locator("#productTitle").first.inner_text()
 
         except Exception as error:
-            logger.error(f"Failed getting product name: {error}")
 
-            return None
+            raise ProductError(f"Failed getting product name: {error}")
 
         product_name = product_name.strip()
 
@@ -74,28 +75,27 @@ class ProductManager:
         logger.info("Getting product price")
 
         try:
+
             whole_price = self.page.locator(".a-price-whole").first.inner_text()
 
             fraction_price = self.page.locator(".a-price-fraction").first.inner_text()
 
         except Exception as error:
-            logger.error(f"Failed getting product price: {error}")
 
-            return None
+            raise ProductError("Failed getting product price: {error}")
 
-        # Remove any hidden/nested characters Amazon includes
         whole_price = whole_price.replace(".", "").strip()
         fraction_price = fraction_price.strip()
 
         price_text = f"{whole_price}.{fraction_price}"
 
         try:
+
             price = float(price_text)
 
         except ValueError:
-            logger.error(f"Invalid price format: {price_text}")
 
-            return None
+            raise ProductError(f"Invalid price format: {price_text}")
 
         logger.info(f"Product price: £{price:.2f}")
 
@@ -105,16 +105,14 @@ class ProductManager:
 
         logger.info("Checking product price")
 
-        max_price = self.config.max_price
-
         logger.debug(f"Current price: {price}")
-        logger.debug(f"Max price: {max_price}")
+        logger.debug(f"Max price: {self.config.max_price}")
 
-        if price <= max_price:
+        if price <= self.config.max_price:
             logger.info("Product is within price limit")
 
             return True
 
-        logger.info(f"Product exceeds maximum price: {max_price}")
+        logger.info(f"Product exceeds maximum price: {self.config.max_price}")
 
         return False

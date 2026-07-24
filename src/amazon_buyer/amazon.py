@@ -1,5 +1,6 @@
 import logging
-from plistlib import load
+
+from amazon_buyer.exceptions import AmazonError
 
 logger = logging.getLogger("amazon_logger")
 
@@ -18,56 +19,41 @@ class AmazonSetup:
         logger.info("Checking Amazon login status")
 
         try:
-            if check_page:
-                self.page.goto(
-                    "https://www.amazon.co.uk/gp/your-account/order-history",timeout=30000)
 
-                self.page.wait_for_load_state(
-                    "domcontentloaded",
-                    timeout=30000
-                )
+            if check_page:
+
+                self.page.goto("https://www.amazon.co.uk/gp/your-account/order-history",timeout=30000)
+
+                self.page.wait_for_load_state("domcontentloaded",timeout=30000)
 
         except Exception as error:
-            logger.error(
-                f"Failed checking login status: {error}"
-            )
 
-            return False
-
+            raise AmazonError(f"Failed checking login status: {error}")
 
         current_url = self.page.url
 
         try:
+
             title = self.page.title()
 
         except Exception:
+
             title = ""
 
 
-        logger.debug(
-            f"Current URL: {current_url}"
-        )
+        logger.debug(f"Current URL: {current_url}")
 
-        logger.debug(
-            f"Page title: {title}"
-        )
+        logger.debug(f"Page title: {title}")
 
 
-        if (
-            "/ap/signin" in current_url
-            or "Amazon Sign-In" in title
-        ):
+        if "/ap/signin" in current_url or "Amazon Sign-In" in title:
 
-            logger.info(
-                "Amazon login page detected"
-            )
+            logger.info("Amazon login page detected")
 
             return False
 
 
-        logger.info(
-            "User appears to be logged in"
-        )
+        logger.info("User appears to be logged in")
 
         return True
 
@@ -76,38 +62,21 @@ class AmazonSetup:
 
         if self.is_logged_in():
 
-            logger.info(
-                "Already logged in"
-            )
+            logger.info("Already logged in")
 
             return True
 
+        logger.info("Manual login required")
 
-        logger.info(
-            "Manual login required"
-        )
-
-
-        input(
-            "Please log into Amazon manually, then press Enter..."
-        )
-
+        input("Please log into Amazon manually, then press Enter...")
 
         if not self.is_logged_in():
 
-            logger.error(
-                "Login verification failed"
-            )
-
-            return False
-
+            raise AmazonError("Login verification failed")
 
         self.browser.save_session()
 
-
-        logger.info(
-            "Login successful"
-        )
+        logger.info("Login successful")
 
         return True
         

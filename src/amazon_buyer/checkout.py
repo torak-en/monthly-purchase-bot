@@ -1,5 +1,7 @@
 import logging
 
+from amazon_buyer.exceptions import CheckoutError
+
 logger = logging.getLogger("amazon_logger")
 
 
@@ -13,7 +15,7 @@ class CheckoutManager:
 
     def add_to_basket(self):
 
-        logger.info("Adding product to cart")
+        logger.info("Adding product to basket")
 
         try:
 
@@ -26,11 +28,10 @@ class CheckoutManager:
             add_button.click()
 
         except Exception as error:
-            logger.error(f"failed to add product to basket: {error}")
 
-            return False
+            raise CheckoutError(f"failed to add product to basket: {error}")
 
-        logger.info("Add to basket clicked")
+        logger.info("Add to basket button clicked")
 
         return True
 
@@ -47,9 +48,7 @@ class CheckoutManager:
 
         except Exception as error:
 
-            logger.error(f"Failed to verify basket total: {error}")
-
-            return None
+            raise CheckoutError(f"Failed to verify basket total: {error}")
 
         price_text = (whole.replace(".", "").strip() + "." + fraction.strip())
 
@@ -59,9 +58,7 @@ class CheckoutManager:
 
         except ValueError:
 
-            logger.error(f"Invalid basket total format: {price_text}")
-
-            return None
+            raise CheckoutError(f"Invalid basket total format: {price_text}")
 
         logger.info(f"Basket total: {basket_total:.2f}")
 
@@ -97,9 +94,7 @@ class CheckoutManager:
 
         except Exception as error:
 
-            logger.error(f"Failed to proceed to checkout: {error}")
-
-            return False
+            raise CheckoutError(f"Failed to proceed to checkout: {error}")
 
         logger.info("Checkout page loaded")
 
@@ -117,13 +112,9 @@ class CheckoutManager:
 
         except Exception as error:
 
-            logger.error(f"Could not locate purchase button: {error}")
-
-            return False
+            raise CheckoutError(f"Could not locate purchase button: {error}")
 
         logger.info("Purchase button located")
-
-        logger.debug(self.config.dry_run)
 
         if self.config.dry_run:
 
