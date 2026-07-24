@@ -72,8 +72,6 @@ def main():
 
             logger.info("Purchase workflow completed successfully")
 
-            input("Press any key to continue...")
-
         finally:
 
             browser.close()

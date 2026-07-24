@@ -199,7 +199,44 @@ This allows the complete workflow to be verified without placing an order.
 
 ## Example Output
 
-*Application logs will be added here.*
+```
+2026-07-24 13:31:56,520 - amazon_logger - INFO - Monthly Purchase Bot Starting...
+2026-07-24 13:31:56,521 - amazon_logger - INFO - Configuration loaded successfully
+2026-07-24 13:31:56,521 - amazon_logger - INFO - Starting Playwright
+2026-07-24 13:31:56,813 - amazon_logger - INFO - Launching Chromium
+2026-07-24 13:31:57,003 - amazon_logger - INFO - Creating browser context
+2026-07-24 13:31:57,003 - amazon_logger - INFO - Existing session found
+2026-07-24 13:31:57,241 - amazon_logger - INFO - Creating browser page
+2026-07-24 13:31:57,361 - amazon_logger - INFO - Browser started successfully
+2026-07-24 13:31:57,361 - amazon_logger - INFO - Checking Amazon login status
+2026-07-24 13:31:59,380 - amazon_logger - INFO - User appears to be logged in
+2026-07-24 13:31:59,380 - amazon_logger - INFO - Already logged in
+2026-07-24 13:31:59,381 - amazon_logger - INFO - Amazon authentication successful
+2026-07-24 13:31:59,381 - amazon_logger - INFO - Opening product page
+2026-07-24 13:32:01,703 - amazon_logger - INFO - Product page opened successfully
+2026-07-24 13:32:01,703 - amazon_logger - INFO - Product page ready
+2026-07-24 13:32:01,703 - amazon_logger - INFO - Getting product name
+2026-07-24 13:32:01,732 - amazon_logger - INFO - Product name: Indomie Mi Goreng Instant Stir Fried Noodles 80g | 40 Pack Box
+2026-07-24 13:32:01,732 - amazon_logger - INFO - Getting product price
+2026-07-24 13:32:01,750 - amazon_logger - INFO - Product price: £14.58
+2026-07-24 13:32:01,750 - amazon_logger - INFO - Checking product price
+2026-07-24 13:32:01,750 - amazon_logger - INFO - Product is within price limit
+2026-07-24 13:32:01,750 - amazon_logger - INFO - Price verification successful
+2026-07-24 13:32:01,750 - amazon_logger - INFO - Adding product to basket
+2026-07-24 13:32:02,137 - amazon_logger - INFO - Add to basket button clicked
+2026-07-24 13:32:02,137 - amazon_logger - INFO - Verifying basket total
+2026-07-24 13:32:02,365 - amazon_logger - INFO - Basket total: 14.58
+2026-07-24 13:32:02,365 - amazon_logger - INFO - Verifying basket total
+2026-07-24 13:32:02,365 - amazon_logger - INFO - Basket total matches product price
+2026-07-24 13:32:02,366 - amazon_logger - INFO - Basket verification successful
+2026-07-24 13:32:02,366 - amazon_logger - INFO - Proceeding to checkout
+2026-07-24 13:32:03,876 - amazon_logger - INFO - Checkout page loaded
+2026-07-24 13:32:03,877 - amazon_logger - INFO - Checkout page ready
+2026-07-24 13:32:03,877 - amazon_logger - INFO - Preparing to purchase
+2026-07-24 13:32:04,002 - amazon_logger - INFO - Purchase button located
+2026-07-24 13:32:04,002 - amazon_logger - WARNING - Dry run enabled - purchase button found but not clicked
+2026-07-24 13:32:04,002 - amazon_logger - INFO - Purchase workflow completed successfully
+```
 
 ## Current Limitations
 
