@@ -257,6 +257,6 @@ This allows the complete workflow to be verified without placing an order.
 
 ## Disclaimer
 
-This project was created for educational and portfolio purposes to demonstrate browser automation using Playwright.
-
-Users are responsible for complying with Amazon's Terms of Service and should use automation responsibly.
+> This project was created for educational and portfolio purposes to demonstrate browser automation using Playwright.
+>
+> Users are responsible for complying with Amazon's Terms of Service and should use automation responsibly.
